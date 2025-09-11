@@ -71,7 +71,7 @@ else:
         st.rerun()
 
     # 🔥 Artık sadece giriş yapmış kullanıcı görecek
-   def show_kocluk_panel()
+    show_kocluk_panel()
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
