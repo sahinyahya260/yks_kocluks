@@ -20,9 +20,30 @@ if "logged_in" not in st.session_state:
 if "username" not in st.session_state:
     st.session_state["username"] = ""
 
-# -------------------------------
-# GİRİŞ EKRANI
-# -------------------------------
+
+# -----------------------------------------
+# KOÇLUK PANELİ FONKSİYONU
+# -----------------------------------------
+def show_kocluk_panel():
+    st.subheader("📊 YKS Derece Öğrencisi Sistemi")
+    st.write("Türkiye’nin En Başarılı Öğrencilerinin Stratejileri ile Hazırlan!")
+
+    # --- Buraya senin tüm asıl kodların gelecek ---
+    ad = st.text_input("Adın Soyadın", "Örn: Ahmet Yılmaz")
+    hedef_bolum = st.text_input("🎯 Hedef Bölüm", "Örn: Tıp - İstanbul Üniversitesi")
+    sinif = st.selectbox("📚 Sınıf", ["11. Sınıf", "12. Sınıf", "Mezun"])
+    alan = st.selectbox("🔍 Alan", ["Sayısal", "Eşit Ağırlık", "Sözel"])
+    hedef_siralama = st.number_input("🏆 Hedef Sıralama", min_value=1, max_value=500000, value=1000)
+    gunluk_calisma = st.slider("⏳ Günlük Çalışma Saati", 0, 15, 6)
+    uyku = st.slider("💤 Günlük Uyku Saati", 0, 12, 8)
+    motivasyon = st.slider("🔥 Motivasyon Seviyesi", 0, 10, 8)
+
+    st.success("✅ Derece Öğrencisi Programı Başlatıldı!")
+
+
+# -----------------------------------------
+# LOGIN EKRANI
+# -----------------------------------------
 if not st.session_state["logged_in"]:
     st.info("Bu sisteme giriş için **kullanıcı adı ve şifre** gereklidir. Şifreyi Shopier ödeme sonrası alabilirsiniz.")
 
@@ -39,9 +60,9 @@ if not st.session_state["logged_in"]:
             st.error("⛔ Kullanıcı adı veya şifre yanlış!")
             st.markdown(f"[💳 Şifre almak için ödeme yap]({SHOPIER_LINK})")
 
-# -------------------------------
-# KOÇLUK PANELİ (sadece giriş sonrası)
-# -------------------------------
+# -----------------------------------------
+# SADECE LOGIN OLAN GÖRSÜN
+# -----------------------------------------
 else:
     st.sidebar.success(f"Giriş yaptınız ✅ ({st.session_state['username']})")
     if st.sidebar.button("Çıkış Yap"):
@@ -49,15 +70,8 @@ else:
         st.session_state["username"] = ""
         st.rerun()
 
-    # 🔥 Koçluk Paneli Başlangıç
-    st.subheader("📊 Koçluk Paneli")
-    st.write("Burada öğrencinin programı, analizleri, ilerlemesi olacak.")
-
-    st.table({
-        "Ders": ["Matematik", "Türkçe", "Fizik", "Biyoloji"],
-        "Hedef Soru": [40, 35, 25, 30]
-    })
-    # 🔥 Koçluk Paneli Bitiş
+    # 🔥 Artık sadece giriş yapmış kullanıcı görecek
+   def show_kocluk_panel()
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
