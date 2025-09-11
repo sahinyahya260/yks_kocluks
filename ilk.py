@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 APP_TITLE = "🎓 YKS Ultra Profesyonel Koç v2.0"
-SHOPIER_LINK = "https://www.shopier.com/37499480"  # Shopier ürün linki
+SHOPIER_LINK = "https://www.shopier.com/37499480"
 
 st.set_page_config(page_title=APP_TITLE, layout="wide")
 st.title(APP_TITLE)
@@ -40,7 +40,7 @@ if not st.session_state["logged_in"]:
             st.markdown(f"[💳 Şifre almak için ödeme yap]({SHOPIER_LINK})")
 
 # -------------------------------
-# KOÇLUK PANELİ
+# KOÇLUK PANELİ (sadece giriş sonrası)
 # -------------------------------
 else:
     st.sidebar.success(f"Giriş yaptınız ✅ ({st.session_state['username']})")
@@ -49,7 +49,7 @@ else:
         st.session_state["username"] = ""
         st.rerun()
 
-    # 🔥 Buradan sonrası sadece giriş yapan öğrenciye gözükür
+    # 🔥 Koçluk Paneli Başlangıç
     st.subheader("📊 Koçluk Paneli")
     st.write("Burada öğrencinin programı, analizleri, ilerlemesi olacak.")
 
@@ -57,6 +57,7 @@ else:
         "Ders": ["Matematik", "Türkçe", "Fizik", "Biyoloji"],
         "Hedef Soru": [40, 35, 25, 30]
     })
+    # 🔥 Koçluk Paneli Bitiş
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
