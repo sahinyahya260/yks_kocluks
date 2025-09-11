@@ -29,23 +29,13 @@ if 'öğrenci_bilgisi' not in st.session_state:
 if 'program_oluşturuldu' not in st.session_state:
     st.session_state['program_oluşturuldu'] = False
 
-# Kullanıcı verilerini yükleme
-def load_users():
-    """
-    users.csv dosyasından kullanıcı adlarını ve şifrelerini yükler.
-    Dosya bulunamazsa boş bir DataFrame döner.
-    """
-    try:
-        df = pd.read_csv('users.csv')
-        st.info("Kullanıcı verileri 'users.csv' dosyasından başarıyla yüklendi.")
-        return df
-    except FileNotFoundError:
-        st.warning("`users.csv` dosyası bulunamadı. Lütfen kullanıcı verilerini içeren bir dosya oluşturun.")
-        return pd.DataFrame(columns=['username', 'password'])
+# Demo kullanıcılar - DEMO KULLANICI KALDIRILDI
+demo_users = pd.DataFrame({
+    'username': ['admin'],  # Sadece admin kaldı
+    'password': ['admin123']
+})
 
-registered_users = load_users()
-
-# Bölüm temaları
+# Bölüm teması
 BÖLÜM_TEMALARI = {
     "Tıp": {"renk": "#dc3545", "icon": "🩺"},
     "Hukuk": {"renk": "#6f42c1", "icon": "⚖️"},
@@ -103,6 +93,7 @@ def bölüm_kategorisi_belirle(hedef_bölüm):
 if not st.session_state["logged_in"]:
     # LOGIN EKRANI
     st.info("Sisteme giriş yapmak için kullanıcı adı ve şifre gerekli")
+    st.warning("**Demo giriş özelliği devre dışı bırakılmıştır.** Lütfen geçerli kimlik bilgilerinizi kullanın.")
     
     col1, col2, col3 = st.columns([1,2,1])
     
@@ -116,7 +107,7 @@ if not st.session_state["logged_in"]:
             if login_button:
                 if username and password:
                     # Kullanıcı kontrolü
-                    if ((registered_users["username"] == username) & (registered_users["password"] == password)).any():
+                    if ((demo_users["username"] == username) & (demo_users["password"] == password)).any():
                         st.session_state["logged_in"] = True
                         st.session_state["username"] = username
                         st.success(f"Hoş geldin {username}!")
@@ -272,7 +263,7 @@ else:
                 **🎯 Öncelikler:**
                 """)
                 for i, öncelik in enumerate(strateji['öncelik'], 1):
-                    st.markdown(f"• {öncelik}")
+                    st.markdown(f"{i}. {öncelik}")
             
             with col6:
                 st.markdown(f"""
@@ -341,41 +332,4 @@ else:
                     
                     if st.form_submit_button("Kaydet"):
                         tyt_toplam = tyt_turkce + tyt_mat + tyt_fen + tyt_sosyal
-                        ayt_toplam = ayt_mat + ayt_fen1 + ayt_fen2
-                        
-                        st.success(f"TYT: {tyt_toplam} Net, AYT: {ayt_toplam} Net kaydedildi!")
-            
-            st.info("Deneme analiz sistemi geliştiriliyor...")
-
-        elif menu == "💡 Öneriler":
-            st.markdown("### 💡 Derece Öğrencisi Önerileri")
-            
-            # Bölüm özel öneriler
-            bölüm_önerileri = {
-                "Tıp": ["🩺 Biyoloji ve Kimya'ya extra odaklan", "🧠 Problem çözme hızını artır"],
-                "Hukuk": ["⚖️ Türkçe ve mantık güçlendir", "📖 Hukuk felsefesi oku"],
-                "Mühendislik": ["⚙️ Matematik ve Fizik'te uzmanlaş", "🔧 Pratik problem çözme"],
-                "İşletme": ["💼 Matematik ve Sosyal güçlendir", "📊 Analitik düşünce geliştir"],
-                "Öğretmenlik": ["👩‍🏫 Pedagoji oku", "🎯 Öğretim tekniklerini araştır"],
-                "Diğer": ["🎓 Genel strateji uygula", "📚 Kapsayıcı çalışma yap"]
-            }
-            
-            kategori = bilgi['bölüm_kategori']
-            st.markdown(f"#### {tema['icon']} {kategori} Özel Öneriler")
-            
-            for öneri in bölüm_önerileri[kategori]:
-                st.markdown(f"• {öneri}")
-            
-            st.markdown("#### 🏅 Genel Derece Öğrencisi Alışkanlıkları")
-            alışkanlıklar = [
-                "🌅 Erken kalkma (6:00)",
-                "🧘 Günlük meditasyon",
-                "📚 Pomodoro tekniği",
-                "💧 Bol su içme",
-                "🏃 Düzenli egzersiz",
-                "📱 Sosyal medya detoksu",
-                "😴 Kaliteli uyku"
-            ]
-            
-            for alışkanlık in alışkanlıklar:
-                st.markdown(f"• {alışkanlık}")
+                        ayt_toplam = ayt_mat + ayt_fen1 + ayt_f
