@@ -29,13 +29,13 @@ if 'öğrenci_bilgisi' not in st.session_state:
 if 'program_oluşturuldu' not in st.session_state:
     st.session_state['program_oluşturuldu'] = False
 
-# Demo kullanıcılar
+# Demo kullanıcılar (demo hesabı kaldırıldı)
 demo_users = pd.DataFrame({
-    'username': ['demo', 'test', 'admin'],
-    'password': ['123', '456', 'admin123']
+    'username': ['test', 'admin'],
+    'password': ['456', 'admin123']
 })
 
-# Bölüm teması
+# Bölüm temaları
 BÖLÜM_TEMALARI = {
     "Tıp": {"renk": "#dc3545", "icon": "🩺"},
     "Hukuk": {"renk": "#6f42c1", "icon": "⚖️"},
@@ -93,7 +93,6 @@ def bölüm_kategorisi_belirle(hedef_bölüm):
 if not st.session_state["logged_in"]:
     # LOGIN EKRANI
     st.info("Sisteme giriş yapmak için kullanıcı adı ve şifre gerekli")
-    st.success("**Demo Giriş:** Kullanıcı: demo, Şifre: 123")
     
     col1, col2, col3 = st.columns([1,2,1])
     
@@ -263,7 +262,7 @@ else:
                 **🎯 Öncelikler:**
                 """)
                 for i, öncelik in enumerate(strateji['öncelik'], 1):
-                    st.markdown(f"{i}. {öncelik}")
+                    st.markdown(f"• {öncelik}")
             
             with col6:
                 st.markdown(f"""
@@ -337,7 +336,7 @@ else:
                         st.success(f"TYT: {tyt_toplam} Net, AYT: {ayt_toplam} Net kaydedildi!")
             
             st.info("Deneme analiz sistemi geliştiriliyor...")
-        
+
         elif menu == "💡 Öneriler":
             st.markdown("### 💡 Derece Öğrencisi Önerileri")
             
