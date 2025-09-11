@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta, date
 import numpy as np
+import os
 
 # Uygulama ayarları
 APP_TITLE = "🎓 YKS Ultra Profesyonel Koç v2.0"
@@ -29,11 +30,24 @@ if 'öğrenci_bilgisi' not in st.session_state:
 if 'program_oluşturuldu' not in st.session_state:
     st.session_state['program_oluşturuldu'] = False
 
-# Demo kullanıcılar - DEMO KULLANICI KALDIRILDI
-demo_users = pd.DataFrame({
-    'username': ['admin'],  # Sadece admin kaldı
-    'password': ['admin123']
-})
+# Kullanıcı doğrulama fonksiyonu
+def kullanici_dogrula(username, password):
+    try:
+        # users.csv dosyasını oku
+        if os.path.exists('users.csv'):
+            users_df = pd.read_csv('users.csv')
+            
+            # Kullanıcı adı ve şifre kontrolü
+            user_match = users_df[(users_df['username'] == username) & (users_df['password'] == password)]
+            
+            if not user_match.empty:
+                return True, "Başarılı giriş"
+            else:
+                return False, "Kullanıcı adı veya şifre hatalı"
+        else:
+            return False, "Kullanıcı veritabanı bulunamadı"
+    except Exception as e:
+        return False, f"Bir hata oluştu: {str(e)}"
 
 # Bölüm teması
 BÖLÜM_TEMALARI = {
@@ -93,7 +107,6 @@ def bölüm_kategorisi_belirle(hedef_bölüm):
 if not st.session_state["logged_in"]:
     # LOGIN EKRANI
     st.info("Sisteme giriş yapmak için kullanıcı adı ve şifre gerekli")
-    st.warning("**Demo giriş özelliği devre dışı bırakılmıştır.** Lütfen geçerli kimlik bilgilerinizi kullanın.")
     
     col1, col2, col3 = st.columns([1,2,1])
     
@@ -106,14 +119,16 @@ if not st.session_state["logged_in"]:
             
             if login_button:
                 if username and password:
-                    # Kullanıcı kontrolü
-                    if ((demo_users["username"] == username) & (demo_users["password"] == password)).any():
+                    # Kullanıcı doğrulama
+                    basarili, mesaj = kullanici_dogrula(username, password)
+                    
+                    if basarili:
                         st.session_state["logged_in"] = True
                         st.session_state["username"] = username
                         st.success(f"Hoş geldin {username}!")
                         st.rerun()
                     else:
-                        st.error("Kullanıcı adı veya şifre yanlış!")
+                        st.error(mesaj)
                 else:
                     st.warning("Lütfen kullanıcı adı ve şifre girin!")
     
@@ -332,4 +347,41 @@ else:
                     
                     if st.form_submit_button("Kaydet"):
                         tyt_toplam = tyt_turkce + tyt_mat + tyt_fen + tyt_sosyal
-                        ayt_toplam = ayt_mat + ayt_fen1 + ayt_f
+                        ayt_toplam = ayt_mat + ayt_fen1 + ayt_fen2
+                        
+                        st.success(f"TYT: {tyt_toplam} Net, AYT: {ayt_toplam} Net kaydedildi!")
+            
+            st.info("Deneme analiz sistemi geliştiriliyor...")
+        
+        elif menu == "💡 Öneriler":
+            st.markdown("### 💡 Derece Öğrencisi Önerileri")
+            
+            # Bölüm özel öneriler
+            bölüm_önerileri = {
+                "Tıp": ["🩺 Biyoloji ve Kimya'ya extra odaklan", "🧠 Problem çözme hızını artır"],
+                "Hukuk": ["⚖️ Türkçe ve mantık güçlendir", "📖 Hukuk felsefesi oku"],
+                "Mühendislik": ["⚙️ Matematik ve Fizik'te uzmanlaş", "🔧 Pratik problem çözme"],
+                "İşletme": ["💼 Matematik ve Sosyal güçlendir", "📊 Analitik düşünce geliştir"],
+                "Öğretmenlik": ["👩‍🏫 Pedagoji oku", "🎯 Öğretim tekniklerini araştır"],
+                "Diğer": ["🎓 Genel strateji uygula", "📚 Kapsayıcı çalışma yap"]
+            }
+            
+            kategori = bilgi['bölüm_kategori']
+            st.markdown(f"#### {tema['icon']} {kategori} Özel Öneriler")
+            
+            for öneri in bölüm_önerileri[kategori]:
+                st.markdown(f"• {öneri}")
+            
+            st.markdown("#### 🏅 Genel Derece Öğrencisi Alışkanlıkları")
+            alışkanlıklar = [
+                "🌅 Erken kalkma (6:00)",
+                "🧘 Günlük meditasyon",
+                "📚 Pomodoro tekniği",
+                "💧 Bol su içme",
+                "🏃 Düzenli egzersiz",
+                "📱 Sosyal medya detoksu",
+                "😴 Kaliteli uyku"
+            ]
+            
+            for alışkanlık in alışkanlıklar:
+                st.markdown(f"• {alışkanlık}")
