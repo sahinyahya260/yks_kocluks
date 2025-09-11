@@ -29,11 +29,21 @@ if 'öğrenci_bilgisi' not in st.session_state:
 if 'program_oluşturuldu' not in st.session_state:
     st.session_state['program_oluşturuldu'] = False
 
-# Demo kullanıcılar (demo hesabı kaldırıldı)
-demo_users = pd.DataFrame({
-    'username': ['test', 'admin'],
-    'password': ['456', 'admin123']
-})
+# Kullanıcı verilerini yükleme
+def load_users():
+    """
+    users.csv dosyasından kullanıcı adlarını ve şifrelerini yükler.
+    Dosya bulunamazsa boş bir DataFrame döner.
+    """
+    try:
+        df = pd.read_csv('users.csv')
+        st.info("Kullanıcı verileri 'users.csv' dosyasından başarıyla yüklendi.")
+        return df
+    except FileNotFoundError:
+        st.warning("`users.csv` dosyası bulunamadı. Lütfen kullanıcı verilerini içeren bir dosya oluşturun.")
+        return pd.DataFrame(columns=['username', 'password'])
+
+registered_users = load_users()
 
 # Bölüm temaları
 BÖLÜM_TEMALARI = {
@@ -106,7 +116,7 @@ if not st.session_state["logged_in"]:
             if login_button:
                 if username and password:
                     # Kullanıcı kontrolü
-                    if ((demo_users["username"] == username) & (demo_users["password"] == password)).any():
+                    if ((registered_users["username"] == username) & (registered_users["password"] == password)).any():
                         st.session_state["logged_in"] = True
                         st.session_state["username"] = username
                         st.success(f"Hoş geldin {username}!")
